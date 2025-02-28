@@ -11,6 +11,7 @@
         bun
         nodejs_20
         flyctl
+        stripe-cli
         typescript
       ];
     };
