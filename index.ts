@@ -37,6 +37,7 @@ const app = new Elysia()
 
     try {
       const event = await stripe.webhooks.constructEventAsync(buffer, signature, secret);
+      // event is of type Stripe.Event which is easy to handle
       console.log("YAYAYAYYAY!!!!");
       console.log(event);
     } catch (e) {
