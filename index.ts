@@ -11,6 +11,12 @@ const kit: Kit = {
   secret: process.env.STRIPE_WEBHOOK_SECRET!,
 }
 
+
+// TODO
+// just make a general "handle stripe event" function that takes in the stripe
+// event and does all of the transaction stuff with it and returns an error
+// if necessary
+
 const app = new Elysia()
   .state("kit", kit)
   .onParse((ctx) => {
