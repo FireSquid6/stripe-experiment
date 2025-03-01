@@ -1,4 +1,4 @@
-import { Elysia } from "elysia";
+import { Elysia, t } from "elysia";
 import { Stripe } from "stripe";
 
 interface Kit {
@@ -13,11 +13,33 @@ const kit: Kit = {
 
 const app = new Elysia()
   .state("kit", kit)
+  .onParse((ctx) => {
+    return ctx.request.text();
+  })
   .get("/", () => {
     console.log("hello, world!");
   })
-  .post("/webhook", (ctx) => {
-    console.log(ctx.body);
+  .post("/webhook", async (ctx) => {
+    const buffer = Buffer.from(ctx.body);
+    const signature = ctx.headers["stripe-signature"];
+    const { stripe, secret } = ctx.store.kit;
+
+    if (signature === undefined) {
+      console.log("Error: no signature");
+      return ctx.error(500);
+    }
+
+    try {
+      const event = await stripe.webhooks.constructEventAsync(buffer, signature, secret);
+      console.log("YAYAYAYYAY!!!!");
+      console.log(event);
+    } catch (e) {
+      console.log("FUCK!!!!")
+      console.log(e);
+    }
+    
+  }, {
+    body: t.String(),
   })
 
 
